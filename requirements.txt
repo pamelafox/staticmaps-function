@@ -4,3 +4,5 @@
 
 azure-functions
 py-staticmaps
+fastapi
+nest_asyncio

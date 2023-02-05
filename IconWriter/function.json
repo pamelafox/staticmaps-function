@@ -8,10 +8,10 @@
       "name": "req",
       "methods": [
         "get"
-      ]
+      ],
+      "route": "{*route}"
     },
     {
-      "dataType": "binary",
       "type": "http",
       "direction": "out",
       "name": "$return"

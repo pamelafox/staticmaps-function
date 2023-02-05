@@ -2,9 +2,6 @@ param name string
 param location string = resourceGroup().location
 param resourceToken string
 param tags object
-param publisherEmail string
-param publisherName string
-param allowedOrigin string
 
 var prefix = '${name}-${resourceToken}'
 
@@ -107,39 +104,4 @@ resource functionApp 'Microsoft.Web/sites@2020-06-01' = {
       ]
     }
   }
-}
-
-
-module apiManagementResources 'apimanagement.bicep' = {
-  name: 'apimanagement-resources'
-  params: {
-    prefix: prefix
-    location: location
-    tags: tags
-    functionAppName: functionApp.name
-    functionAppUrl: functionApp.properties.hostNames[0]
-    functionAppId: functionApp.id
-    functionAppKey: listKeys('${functionApp.id}/host/default', '2019-08-01').functionKeys.default
-    appInsightsName: appInsights.name
-    appInsightsId: appInsights.id
-    appInsightsKey: appInsights.properties.InstrumentationKey
-    publisherEmail: publisherEmail
-    publisherName: publisherName
-    allowedOrigin: allowedOrigin
-  }
-}
-
-
-resource functionAppProperties 'Microsoft.Web/sites/config@2022-03-01' = {
-  name: 'web'
-  kind: 'string'
-  parent: functionApp
-  properties: {
-      apiManagementConfig: {
-        id: '${apiManagementResources.outputs.apimServiceID}/apis/icon-writer-function'
-      }
-  }
-  dependsOn: [
-    apiManagementResources
-  ]
 }

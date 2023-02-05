@@ -1,12 +1,16 @@
 import io
 
 import azure.functions as func
-from icon_writer import write_icon
+from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
 
 import staticmaps
 
+app = fastapi.FastAPI()
+nest_asyncio.apply()
 
-def main(req: func.HttpRequest) -> func.HttpResponse:
+@app.get("/generate_map")
+def main() -> StreamingResponse:
     context = staticmaps.Context()
     context.set_tile_provider(staticmaps.tile_provider_StamenToner)
 
@@ -23,4 +27,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     img_byte_arr = io.BytesIO()
     image_pil.save(img_byte_arr, format='PNG')
     img_byte_arr = img_byte_arr.getvalue()
-    return func.HttpResponse(img_byte_arr, mimetype='image/png')
+    return StreamingResponse(img_byte_arr, media_type="image/png")
+
+async def main(
+    req: azure.functions.HttpRequest, context: azure.functions.Context
+) -> azure.functions.HttpResponse:
+    return azure.functions.AsgiMiddleware(app).handle(req, context)
