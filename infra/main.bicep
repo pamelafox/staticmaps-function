@@ -19,8 +19,6 @@ resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
 }
 
 var prefix = '${name}-${resourceToken}'
-var appServicePlanName = '${prefix}-plan'
-var appInsightsName = '${prefix}-appinsights'
 
 // Monitor application with Azure Monitor
 module monitoring './core/monitor/monitoring.bicep' = {
@@ -30,7 +28,7 @@ module monitoring './core/monitor/monitoring.bicep' = {
     location: location
     tags: tags
     logAnalyticsName: '${prefix}-logworkspace'
-    applicationInsightsName: appInsightsName
+    applicationInsightsName: '${prefix}-appinsights'
     applicationInsightsDashboardName: 'appinsights-dashboard'
   }
 }
@@ -53,7 +51,7 @@ module appServicePlan './core/host/appserviceplan.bicep' = {
   name: 'appserviceplan'
   scope: resourceGroup
   params: {
-    name: appServicePlanName
+    name: '${prefix}-plan'
     location: location
     tags: tags
     sku: {
@@ -74,7 +72,7 @@ module functionApp 'core/host/functions.bicep' = {
     appSettings: {
       PYTHON_ISOLATE_WORKER_DEPENDENCIES: 1
     }
-    applicationInsightsName: appInsightsName
+    applicationInsightsName: monitoring.outputs.applicationInsightsName
     appServicePlanId: appServicePlan.outputs.id
     runtimeName: 'python'
     runtimeVersion: '3.9'
@@ -101,8 +99,9 @@ module cdnEndpoint 'cdn-endpoint.bicep' = {
     location: location
     tags: tags
     cdnProfileName: '${prefix}-cdn-profile'
+    functionAppName: functionApp.outputs.name
     originUrl: last(split(functionApp.outputs.uri, '//'))
   }
 }
 
-output SERVICE_WEB_ENDPOINTS array = [functionApp.outputs.uri, cdnEndpoint.outputs.uri]
+output SERVICE_API_ENDPOINTS array = [functionApp.outputs.uri, cdnEndpoint.outputs.uri]
