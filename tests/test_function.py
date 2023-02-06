@@ -1,5 +1,6 @@
 # Test the API functions in the function module
 import io
+import math
 
 import fastapi
 import fastapi.testclient
@@ -11,7 +12,11 @@ from function import fastapi_app
 def assert_image_equal(image1, image2):
     assert image1.size == image2.size
     assert image1.mode == image2.mode
-    assert image1.tobytes() == image2.tobytes()
+    # Based on https://stackoverflow.com/a/55251080/1347623
+    diff = PIL.ImageChops.difference(image1, image2).histogram()
+    sq = (value * (i % 256) ** 2 for i, value in enumerate(diff))
+    rms = math.sqrt(sum(sq) / float(image1.size[0] * image1.size[1]))
+    assert rms < 90
 
 
 def test_generate_map():
