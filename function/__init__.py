@@ -1,10 +1,10 @@
-import io
 import enum
+import io
 
 import azure.functions
 import fastapi
-import nest_asyncio
 import fastapi.responses
+import nest_asyncio
 import staticmaps
 
 app = fastapi.FastAPI()
@@ -15,7 +15,7 @@ tile_provider_names.remove("none")
 TileProvider = enum.Enum('TileProvider', ((x,x) for x in tile_provider_names))
 
 @app.get("/generate_map")
-def main(center: str = fastapi.Query(example="40.714728,-73.998672", regex="^-?\d+(\.\d+)?,-?\d+(\.\d+)?$"),
+def generate_map(center: str = fastapi.Query(example="40.714728,-73.998672", regex="^-?\d+(\.\d+)?,-?\d+(\.\d+)?$"),
          zoom: int = fastapi.Query(example=12, ge=0, le=30),
          width: int = 400,
          height: int = 400,
