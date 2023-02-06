@@ -81,3 +81,28 @@ module functionApp 'core/host/functions.bicep' = {
     storageAccountName: storageAccount.outputs.name
   }
 }
+
+// CDN in front
+module cdnProfile 'cdn-profile.bicep' = {
+  name: 'cdn-profile'
+  scope: resourceGroup
+  params: {
+    name: '${prefix}-cdn-profile'
+    location: location
+    tags: tags
+  }
+}
+
+module cdnEndpoint 'cdn-endpoint.bicep' = {
+  name: 'cdn-endpoint'
+  scope: resourceGroup
+  params: {
+    name: '${prefix}-cdn-endpoint'
+    location: location
+    tags: tags
+    cdnProfileName: '${prefix}-cdn-profile'
+    originUrl: last(split(functionApp.outputs.uri, '//'))
+  }
+}
+
+output SERVICE_WEB_ENDPOINTS array = [functionApp.outputs.uri, cdnEndpoint.outputs.uri]
