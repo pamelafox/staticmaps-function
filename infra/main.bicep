@@ -29,7 +29,7 @@ module monitoring './core/monitor/monitoring.bicep' = {
     tags: tags
     logAnalyticsName: '${prefix}-logworkspace'
     applicationInsightsName: '${prefix}-appinsights'
-    applicationInsightsDashboardName: 'appinsights-dashboard'
+    applicationInsightsDashboardName: '${prefix}-dashboard'
   }
 }
 
