@@ -1,42 +1,25 @@
-import enum
-import io
+import os
 
 import azure.functions
-import fastapi
-import fastapi.responses
-import nest_asyncio
-import staticmaps
+from azure.monitor.opentelemetry.exporter import AzureMonitorTraceExporter
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+from opentelemetry.sdk.resources import SERVICE_NAME, Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
-app = fastapi.FastAPI()
-nest_asyncio.apply()
+from .fastapi_app import create_app
 
-tile_provider_names = list(staticmaps.default_tile_providers.keys())
-tile_provider_names.remove("none")
-TileProvider = enum.Enum("TileProvider", ((x, x) for x in tile_provider_names))
+fastapi_app = create_app()
 
 
-@app.get("/generate_map")
-def generate_map(
-    center: str = fastapi.Query(example="40.714728,-73.998672", regex="^-?\d+(\.\d+)?,-?\d+(\.\d+)?$"),
-    zoom: int = fastapi.Query(example=12, ge=0, le=30),
-    width: int = 400,
-    height: int = 400,
-    tile_provider: TileProvider = TileProvider.osm,
-) -> fastapi.responses.Response:
-    # Create the static map context
-    context = staticmaps.Context()
-    context.set_tile_provider(staticmaps.default_tile_providers[tile_provider.value])
-    center = center.split(",")
-    newyork = staticmaps.create_latlng(float(center[0]), float(center[1]))
-    context.set_center(newyork)
-    context.set_zoom(zoom)
-
-    # Render to PNG image and return
-    image_pil = context.render_pillow(width, height)
-    img_byte_arr = io.BytesIO()
-    image_pil.save(img_byte_arr, format="PNG")
-    return fastapi.responses.Response(img_byte_arr.getvalue(), media_type="image/png")
+@fastapi_app.on_event("startup")
+async def startup_event():
+    if conn_str := os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING"):
+        exporter = AzureMonitorTraceExporter.from_connection_string(conn_str)
+        tracer = TracerProvider(resource=Resource({SERVICE_NAME: "api"}))
+        tracer.add_span_processor(BatchSpanProcessor(exporter))
+        FastAPIInstrumentor.instrument_app(fastapi_app, tracer_provider=tracer)
 
 
 async def main(req: azure.functions.HttpRequest, context: azure.functions.Context) -> azure.functions.HttpResponse:
-    return azure.functions.AsgiMiddleware(app).handle(req, context)
+    return await azure.functions.AsgiMiddleware(fastapi_app).handle_async(req, context)

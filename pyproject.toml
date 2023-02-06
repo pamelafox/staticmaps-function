@@ -13,3 +13,8 @@ testpaths = [
     "tests"
 ]
 pythonpath = ['.']
+
+[tool.coverage.run]
+omit = [
+    "/usr/lib/*"
+]
