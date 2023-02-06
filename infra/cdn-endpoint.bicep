@@ -10,6 +10,10 @@ param originUrl string
 @minLength(1)
 param cdnProfileName string
 
+@description('The name of the Function app resource')
+@minLength(1)
+param functionAppName string
+
 resource endpoint 'Microsoft.Cdn/profiles/endpoints@2022-05-01-preview' = {
   parent: cdnProfile
   name: name
@@ -46,6 +50,15 @@ resource endpoint 'Microsoft.Cdn/profiles/endpoints@2022-05-01-preview' = {
                   cacheType: 'All'
                   cacheDuration: '00:05:00'
                   typeName: 'DeliveryRuleCacheExpirationActionParameters'
+              }
+            }
+            {
+              name: 'ModifyRequestHeader'
+              parameters: {
+                headerAction: 'Overwrite'
+                headerName: 'x-functions-key'
+                value: listKeys('${functionApp.id}/host/default', '2019-08-01').functionKeys.default
+                typeName: 'DeliveryRuleHeaderActionParameters'
               }
             }
           ]
@@ -86,6 +99,10 @@ resource endpoint 'Microsoft.Cdn/profiles/endpoints@2022-05-01-preview' = {
 
 resource cdnProfile 'Microsoft.Cdn/profiles@2022-05-01-preview' existing = {
   name: cdnProfileName
+}
+
+resource functionApp 'Microsoft.Web/sites@2022-03-01' existing = {
+  name: functionAppName
 }
 
 output uri string = 'https://${endpoint.properties.hostName}'
