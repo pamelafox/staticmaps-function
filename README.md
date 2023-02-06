@@ -6,7 +6,7 @@ The code is tested with pytest, linted with ruff, and formatted with black.
 
 This API is designed to be deployed as an Azure Function with an Azure CDN in front.
 
-![Architecture diagram for API Management Service to Function App to FastAPI](readme_diagram_apim.png)
+![Architecture diagram for CDN to Function App to FastAPI](readme_diagram.png)
 
 ## Opening the project
 
