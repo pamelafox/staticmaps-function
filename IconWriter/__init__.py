@@ -1,33 +1,40 @@
 import io
+import enum
 
-import azure.functions as func
-from fastapi import FastAPI
-from fastapi.responses import StreamingResponse
-
+import azure.functions
+import fastapi
+import nest_asyncio
+import fastapi.responses
 import staticmaps
 
 app = fastapi.FastAPI()
 nest_asyncio.apply()
 
+tile_provider_names = list(staticmaps.default_tile_providers.keys())
+tile_provider_names.remove("none")
+TileProvider = enum.Enum('TileProvider', ((x,x) for x in tile_provider_names))
+
 @app.get("/generate_map")
-def main() -> StreamingResponse:
+# latlng: List[str] = Query(default=[40.714728,-73.998672], min_length=2, max_length=2),
+def main(center: str = fastapi.Query(example="40.714728,-73.998672", regex="^-?\d+(\.\d+)?,-?\d+(\.\d+)?$"),
+         zoom: int = fastapi.Query(example=12, ge=0, le=30),
+         width: int = 400,
+         height: int = 400,
+         tile_provider: TileProvider = TileProvider.osm
+         ) -> fastapi.responses.Response:
+    
     context = staticmaps.Context()
-    context.set_tile_provider(staticmaps.tile_provider_StamenToner)
-
-    frankfurt = staticmaps.create_latlng(50.110644, 8.682092)
-    newyork = staticmaps.create_latlng(40.712728, -74.006015)
-
-    context.add_object(staticmaps.Line([frankfurt, newyork], color=staticmaps.BLUE, width=4))
-    context.add_object(staticmaps.Marker(frankfurt, color=staticmaps.GREEN, size=12))
-    context.add_object(staticmaps.Marker(newyork, color=staticmaps.RED, size=12))
+    context.set_tile_provider(staticmaps.default_tile_providers[tile_provider.value])
+    center = center.split(",")
+    newyork = staticmaps.create_latlng(float(center[0]), float(center[1]))
+    context.set_center(newyork)
+    context.set_zoom(zoom)
 
     # render non-anti-aliased png
-    image_pil = context.render_pillow(800, 500)
-
+    image_pil = context.render_pillow(width, height)
     img_byte_arr = io.BytesIO()
     image_pil.save(img_byte_arr, format='PNG')
-    img_byte_arr = img_byte_arr.getvalue()
-    return StreamingResponse(img_byte_arr, media_type="image/png")
+    return fastapi.responses.Response(img_byte_arr.getvalue(), media_type="image/png")
 
 async def main(
     req: azure.functions.HttpRequest, context: azure.functions.Context
