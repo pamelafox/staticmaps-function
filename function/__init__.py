@@ -15,7 +15,6 @@ tile_provider_names.remove("none")
 TileProvider = enum.Enum('TileProvider', ((x,x) for x in tile_provider_names))
 
 @app.get("/generate_map")
-# latlng: List[str] = Query(default=[40.714728,-73.998672], min_length=2, max_length=2),
 def main(center: str = fastapi.Query(example="40.714728,-73.998672", regex="^-?\d+(\.\d+)?,-?\d+(\.\d+)?$"),
          zoom: int = fastapi.Query(example=12, ge=0, le=30),
          width: int = 400,
@@ -23,6 +22,7 @@ def main(center: str = fastapi.Query(example="40.714728,-73.998672", regex="^-?\
          tile_provider: TileProvider = TileProvider.osm
          ) -> fastapi.responses.Response:
     
+    # Create the static map context
     context = staticmaps.Context()
     context.set_tile_provider(staticmaps.default_tile_providers[tile_provider.value])
     center = center.split(",")
@@ -30,7 +30,7 @@ def main(center: str = fastapi.Query(example="40.714728,-73.998672", regex="^-?\
     context.set_center(newyork)
     context.set_zoom(zoom)
 
-    # render non-anti-aliased png
+    # Render to PNG image and return
     image_pil = context.render_pillow(width, height)
     img_byte_arr = io.BytesIO()
     image_pil.save(img_byte_arr, format='PNG')

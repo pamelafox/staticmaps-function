@@ -1,0 +1,8 @@
+-r requirements.txt
+fastapi[all]
+pytest
+coverage
+pytest-cov
+black
+ruff
+pre-commit
