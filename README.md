@@ -1,10 +1,18 @@
-This repository creates a Static Maps API using the FastAPI framework and the py-staticmaps package.
-The API accepts query parameters to customize each map and responds with a PNG image.
-The code is tested with pytest, linted with ruff, and formatted with black.
+# Static Maps API (Function App)
+
+This repository creates a Static Maps API using
+the [FastAPI framework](https://fastapi.tiangolo.com/) and
+the [py-staticmaps](https://pypi.org/project/py-staticmaps/) package.
+The API accepts query parameters to customize the map and responds with a PNG image.
+The code is tested with [pytest](https://pypi.org/project/pytest/),
+linted with [ruff](https://pypi.org/project/ruff/),
+and formatted with [black](https://pypi.org/project/black/).
 
 ![Screenshot of FastAPI documentation on left and image map output on right](readme_screenshot.png)
 
 This API is designed to be deployed as an Azure Function with an Azure CDN in front.
+The function is secured, so the CDN endpoint uses a rule to pass the function key in the x-function-key header.
+The CDN endpoint also uses rules to cache the images for 7 days, to reduce unneeded function traffic.
 
 ![Architecture diagram for API Management Service to Function App to FastAPI](readme_diagram_apim.png)
 
@@ -32,7 +40,7 @@ Use the local emulator from Azure Functions Core Tools to test the function loca
 1. Open this repository in Github Codespaces or VS Code with Remote Dev Containers extension.
 2. Open the Terminal and make sure you're in the root folder.
 3. Run `func host start`
-4. Click 'http://localhost:7071/{*route}' in the terminal, which should open the website in a new tab.
+4. Click 'http://localhost:7071/{*route}' in the terminal, which should open the auto-generated documentation in a new tab.
 
 ## Deployment
 
@@ -44,7 +52,7 @@ Steps for deployment:
 
 1. Sign up for a [free Azure account](https://azure.microsoft.com/free/)
 2. Run `azd up`. It will prompt you to login and to provide a name (like "fastfunc") and location (like "eastus"). Then it will provision the resources in your account and deploy the latest code.
-3. Once it finishes deploying, navigate to the API endpoint URL from the output.
+3. Once it finishes deploying, navigate to the API endpoint URL from the output. Since the function is secured, you should see a 401 when navigating to the function endpoint. However, the CDN endpoint should successfully display the documentation.
 
 ### CI/CD pipeline
 
