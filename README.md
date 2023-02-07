@@ -39,8 +39,8 @@ Use the local emulator from Azure Functions Core Tools to test the function loca
 
 1. Open this repository in Github Codespaces or VS Code with Remote Dev Containers extension.
 2. Open the Terminal and make sure you're in the root folder.
-3. Run `func host start`
-4. Click 'http://localhost:7071/{*route}' in the terminal, which should open the auto-generated documentation in a new tab.
+3. Run `PYTHON_ISOLATE_WORKER_DEPENDENCIES=1 func host start`
+4. Click 'http://localhost:7071/{*route}' in the terminal, which should open a website in a new tab. Change the URL to "/" to see the auto-generated documentation and try generating a map.
 
 ## Deployment
 
