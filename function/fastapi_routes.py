@@ -24,8 +24,8 @@ def generate_map(
     context = staticmaps.Context()
     context.set_tile_provider(staticmaps.default_tile_providers[tile_provider.value])
     center = center.split(",")
-    newyork = staticmaps.create_latlng(float(center[0]), float(center[1]))
-    context.set_center(newyork)
+    center_ll = staticmaps.create_latlng(float(center[0]), float(center[1]))
+    context.set_center(center_ll)
     context.set_zoom(zoom)
 
     # Render to PNG image and return
