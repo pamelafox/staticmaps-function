@@ -46,6 +46,10 @@ jobs:
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
 
+      # workaround for version 0.6.0 - failing to read env var during provision
+      - name: Azure Dev Init
+        run: azd init --no-prompt
+          
       - name: Azure Dev Provision
         run: azd provision --no-prompt
         env:
