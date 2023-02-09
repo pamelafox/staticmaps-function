@@ -73,7 +73,7 @@ To open that dashboard, run this command once you've deployed:
 azd monitor --overview
 ```
 
-## Costs
+### Costs
 
 (only provided as an example, as of February 2023)
 
@@ -84,7 +84,7 @@ Costs for this architecture are based on incoming traffic / usage, so cost shoul
 - Storage account - Standard tier (Hot): $0.0255 per used GiB, 	$0.065 per 10,000 write transactions. The account is only used to store the function code, so cost depends on size of function code and number of deploys (but should be quite low). [Pricing](https://azure.microsoft.com/pricing/details/storage/files/)
 - Application Insights: $2.88 per GB ingested data. The first 5 GB per billing account are included per month. [Pricing](https://azure.microsoft.com/pricing/details/monitor/)
 
-## Load testing
+### Load testing
 
 This repository includes `locustfile.py` for use with the Python [locust](https://docs.locust.io/)
 framework for performance testing.
@@ -95,6 +95,14 @@ substituting the host name with your CDN host name:
 ```shell
 locust --headless --users 10 --spawn-rate 1 -H https://YOUR-ENDPOINT.azureedge.net/
 ```
+
+### Tile providers
+
+The py-staticmaps project offers several tile providers as options, all based on OpenStreetMap.
+Before using their tiles in production, read through their tile usage guidelines: 
+
+* [OpenStreetMap](https://operations.osmfoundation.org/policies/tiles/)
+* [Stamen Maps](http://maps.stamen.com/#watercolor/12/37.7706/-122.3782)
 
 ## Getting help
 
