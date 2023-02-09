@@ -49,6 +49,10 @@ jobs:
       # workaround for version 0.6.0 - failing to read env var during provision
       - name: Azure Dev Init
         run: azd init --no-prompt
+        env:
+          AZURE_ENV_NAME: ${{ secrets.AZURE_ENV_NAME }}
+          AZURE_LOCATION: ${{ secrets.AZURE_LOCATION }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           
       - name: Azure Dev Provision
         run: azd provision --no-prompt
