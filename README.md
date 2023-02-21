@@ -106,4 +106,4 @@ Before using their tiles in production, read through their tile usage guidelines
 
 ## Getting help
 
-If you're working with this project and running into issues, please post in [Discussions](/discussions).
+If you're working with this project and running into issues, please post in **Discussions**.
