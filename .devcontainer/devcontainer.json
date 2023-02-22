@@ -3,22 +3,17 @@
     "build": {
         "dockerfile": "Dockerfile",
         "args": {
-            "VARIANT": "bullseye"
-        }
+            "IMAGE": "python:3.11"
+        },
+        "context": ".."
     },
     "features": {
-        "ghcr.io/devcontainers/features/docker-from-docker:1": {
-            "version": "20.10"
-        },
         "ghcr.io/devcontainers/features/github-cli:1": {
             "version": "2"
         },
         "ghcr.io/devcontainers/features/node:1": {
             "version": "16",
             "nodeGypDependencies": false
-        },
-        "ghcr.io/devcontainers/features/python:1": {
-            "version": "os-provided"
         }
     },
     "customizations": {
@@ -30,7 +25,7 @@
                 "ms-vscode.vscode-node-azure-pack",
                 "ms-python.python",
                 "ms-azuretools.vscode-azurefunctions"
-            ],
+            ]
         }
     },
     "forwardPorts": [
@@ -38,7 +33,6 @@
         7071
     ],
     "postCreateCommand": "pip3 install --user -r requirements-dev.txt && pre-commit install",
-
     "remoteUser": "vscode",
     "hostRequirements": {
         "memory": "8gb"
