@@ -27,7 +27,7 @@ If you're unable to open the Dev Container, then you'll need to:
 2. Install requirements:
 
     ```shell
-    pip3 install --user -r requirements-dev.txt
+    python3 -m pip install --user -r requirements-dev.txt
     ```
 
 3. Install the [Azure Dev CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd).
@@ -99,7 +99,7 @@ locust --headless --users 10 --spawn-rate 1 -H https://YOUR-ENDPOINT.azureedge.n
 ### Tile providers
 
 The py-staticmaps project offers several tile providers as options, all based on OpenStreetMap.
-Before using their tiles in production, read through their tile usage guidelines: 
+Before using their tiles in production, read through their tile usage guidelines:
 
 * [OpenStreetMap](https://operations.osmfoundation.org/policies/tiles/)
 * [Stamen Maps](http://maps.stamen.com/#watercolor/12/37.7706/-122.3782)
