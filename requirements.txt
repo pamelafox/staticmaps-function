@@ -3,8 +3,8 @@
 # Manually managing azure-functions-worker may cause unexpected issues
 
 azure-functions>=1.12.0
-py-staticmaps
-fastapi
-nest_asyncio
-opentelemetry-instrumentation-fastapi == 0.30b1
-azure-monitor-opentelemetry-exporter == 1.0.0b5
+py-staticmaps==0.4.0
+fastapi==0.92.0
+nest-asyncio==1.5.6
+opentelemetry-instrumentation-fastapi==0.30b1
+azure-monitor-opentelemetry-exporter==1.0.0b5
