@@ -1,7 +1,8 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
 
-name: icon-writer-function-apim
-
+name: staticmaps-fastapi-function
+metadata:
+  template: staticmaps-fastapi-function@0.0.1-beta
 services:
   api:
     project: .
