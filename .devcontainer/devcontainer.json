@@ -8,9 +8,6 @@
         "context": ".."
     },
     "features": {
-        "ghcr.io/devcontainers/features/github-cli:1": {
-            "version": "2"
-        },
         "ghcr.io/devcontainers/features/node:1": {
             "version": "16",
             "nodeGypDependencies": false
@@ -19,12 +16,12 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "ms-azuretools.azure-dev",
-                "ms-azuretools.vscode-bicep",
-                "ms-azuretools.vscode-docker",
-                "ms-vscode.vscode-node-azure-pack",
                 "ms-python.python",
-                "ms-azuretools.vscode-azurefunctions"
+                "ms-python.vscode-pylance",
+                "ms-vscode.vscode-node-azure-pack",
+                "ms-azuretools.vscode-azurefunctions",
+                "ms-azuretools.azure-dev",
+                "ms-azuretools.vscode-bicep"
             ]
         }
     },
