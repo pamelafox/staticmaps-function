@@ -6,5 +6,5 @@ azure-functions>=1.12.0
 py-staticmaps==0.4.0
 fastapi==0.95.2
 nest-asyncio==1.5.6
-opentelemetry-instrumentation-fastapi==0.37b0
+opentelemetry-instrumentation-fastapi==0.39b0
 azure-monitor-opentelemetry-exporter==1.0.0b5
