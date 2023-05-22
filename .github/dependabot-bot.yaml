@@ -1,0 +1,6 @@
+safe:
+ - azure-functions
+ - py-staticmaps
+ - fastapi
+ - nest-asyncio
+ - azure-monitor-opentelemetry-exporter
