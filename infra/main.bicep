@@ -70,7 +70,7 @@ module functionApp 'core/host/functions.bicep' = {
     tags: union(tags, { 'azd-service-name': 'api' })
     alwaysOn: false
     appSettings: {
-      PYTHON_ISOLATE_WORKER_DEPENDENCIES: 1
+      AzureWebJobsFeatureFlags: 'EnableWorkerIndexing'
     }
     applicationInsightsName: monitoring.outputs.applicationInsightsName
     appServicePlanId: appServicePlan.outputs.id

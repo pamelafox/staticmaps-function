@@ -6,12 +6,7 @@
             "label": "func: host start",
             "command": "host start --python",
             "problemMatcher": "$func-python-watch",
-            "isBackground": true,
-            "options": {
-                "env": {
-                    "PYTHON_ISOLATE_WORKER_DEPENDENCIES": "1"
-                }
-            }
+            "isBackground": true
         }
     ]
 }
