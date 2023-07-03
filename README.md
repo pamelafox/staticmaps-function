@@ -50,14 +50,12 @@ which relies on the `azure.yaml` file and the configuration files in the `infra`
 
 Steps for deployment:
 
-1. Sign up for a [free Azure account](https://azure.microsoft.com/free/)
-2. Initialize a new `azd` environment:
+1. Sign up for a [free Azure account](https://azure.microsoft.com/free/) and create an Azure Subscription.
+3. Login to Azure:
 
     ```shell
-    azd init
+    azd auth login
     ```
-
-    It will prompt you to provide a name (like "staticmaps-func") that will later be used in the name of the deployed resources.
 
 3. Provision and deploy all the resources:
 
@@ -65,9 +63,15 @@ Steps for deployment:
     azd up
     ```
 
-    It will prompt you to login, pick a subscription, and provide a location (like "eastus"). Then it will provision the resources in your account and deploy the latest code.
+    It will prompt you to provide an `azd` environment name (like "staticmaps"), select a subscription from your Azure account, and select a location (like "eastus").  Then it will provision the resources in your account and deploy the latest code.
 
 4. Once it finishes deploying, navigate to the API endpoint URL from the output. Since the function is secured, you should see a 401 when navigating to the function endpoint. However, the CDN endpoint should successfully display the documentation.
+
+5. When you've made any changes to the app code, you can just run:
+
+    ```shell
+    azd deploy
+    ```
 
 ### CI/CD pipeline
 
