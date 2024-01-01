@@ -4,7 +4,7 @@
 
 azure-functions>=1.12.0
 py-staticmaps==0.4.0
-fastapi==0.105.0
+fastapi==0.108.0
 Pillow==9.5.0
 nest-asyncio==1.5.8
 opentelemetry-instrumentation-fastapi==0.39b0
