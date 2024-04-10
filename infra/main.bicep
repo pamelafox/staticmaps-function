@@ -80,6 +80,17 @@ module functionApp 'core/host/functions.bicep' = {
   }
 }
 
+
+module diagnostics 'core/host/app-diagnostics.bicep' = {
+  name: '${prefix}-appdiagnostics'
+  scope: resourceGroup
+  params: {
+    appName: functionApp.outputs.name
+    kind: 'functionapp'
+    diagnosticWorkspaceId: monitoring.outputs.logAnalyticsWorkspaceId
+  }
+}
+
 // CDN in front
 module cdnProfile 'cdn-profile.bicep' = {
   name: 'cdn-profile'
