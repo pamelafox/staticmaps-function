@@ -8,4 +8,4 @@ fastapi==0.110.2
 Pillow==9.5.0
 nest-asyncio==1.6.0
 opentelemetry-instrumentation-fastapi==0.45b0
-azure-monitor-opentelemetry-exporter==1.0.0b24
+azure-monitor-opentelemetry-exporter==1.0.0b25
