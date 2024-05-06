@@ -22,7 +22,7 @@ class ImageResponse(fastapi.responses.Response):
     responses={200: {"content": {"image/png": {"schema": {"type": "string", "format": "binary"}}}}},
 )
 def generate_map(
-    center: str = fastapi.Query(example="40.714728,-73.998672", regex=r"^-?\d+(\.\d+)?,-?\d+(\.\d+)?$"),
+    center: str = fastapi.Query(example="40.714728,-73.998672", pattern=r"^-?\d+(\.\d+)?,-?\d+(\.\d+)?$"),
     zoom: int = fastapi.Query(example=12, ge=0, le=30),
     width: int = 400,
     height: int = 400,

@@ -51,7 +51,7 @@ which relies on the `azure.yaml` file and the configuration files in the `infra`
 Steps for deployment:
 
 1. Sign up for a [free Azure account](https://azure.microsoft.com/free/) and create an Azure Subscription.
-3. Login to Azure:
+2. Login to Azure:
 
     ```shell
     azd auth login
