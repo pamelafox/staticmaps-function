@@ -34,6 +34,7 @@ module monitoring './core/monitor/monitoring.bicep' = {
 }
 
 // Backing storage for Azure functions backend API
+var functionServiceName = '${prefix}-function-app'
 var validStoragePrefix = toLower(take(replace(prefix, '-', ''), 17))
 module storageAccount 'core/storage/storage-account.bicep' = {
   name: 'storage'
@@ -42,6 +43,13 @@ module storageAccount 'core/storage/storage-account.bicep' = {
     name: '${validStoragePrefix}storage'
     location: location
     tags: tags
+    allowSharedKeyAccess: false
+    allowBlobPublicAccess: false
+    containers: [
+      {
+        name:functionServiceName
+      }
+    ]
   }
 }
 
@@ -55,27 +63,28 @@ module appServicePlan './core/host/appserviceplan.bicep' = {
     location: location
     tags: tags
     sku: {
-      name: 'Y1'
-      tier: 'Dynamic'
+      name: 'FC1'
+      tier: 'FlexConsumption'
     }
   }
 }
 
-module functionApp 'core/host/functions.bicep' = {
+module functionApp 'core/host/functions-flex.bicep' = {
   name: 'function'
   scope: resourceGroup
   params: {
-    name: '${prefix}-function-app'
+    name: functionServiceName
     location: location
     tags: union(tags, { 'azd-service-name': 'api' })
     alwaysOn: false
     appSettings: {
-      AzureWebJobsFeatureFlags: 'EnableWorkerIndexing'
+      FUNCTIONS_EXTENSION_VERSION: '~4'
+      AzureWebJobsStorage__accountName: storageAccount.name
     }
     applicationInsightsName: monitoring.outputs.applicationInsightsName
     appServicePlanId: appServicePlan.outputs.id
     runtimeName: 'python'
-    runtimeVersion: '3.10'
+    runtimeVersion: '3.11'
     storageAccountName: storageAccount.outputs.name
   }
 }

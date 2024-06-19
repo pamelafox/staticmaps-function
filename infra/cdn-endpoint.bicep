@@ -57,7 +57,7 @@ resource endpoint 'Microsoft.Cdn/profiles/endpoints@2022-05-01-preview' = {
               parameters: {
                 headerAction: 'Overwrite'
                 headerName: 'x-functions-key'
-                value: listKeys('${functionApp.id}/host/default', '2019-08-01').functionKeys.default
+                value: listKeys('${functionApp.id}/host/default', '2023-12-01').functionKeys.default
                 typeName: 'DeliveryRuleHeaderActionParameters'
               }
             }
@@ -101,7 +101,7 @@ resource cdnProfile 'Microsoft.Cdn/profiles@2022-05-01-preview' existing = {
   name: cdnProfileName
 }
 
-resource functionApp 'Microsoft.Web/sites@2022-03-01' existing = {
+resource functionApp 'Microsoft.Web/sites@2023-12-01' existing = {
   name: functionAppName
 }
 
