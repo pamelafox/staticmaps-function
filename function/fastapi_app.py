@@ -2,6 +2,7 @@ import os
 
 import fastapi
 from azure.monitor.opentelemetry.exporter import AzureMonitorTraceExporter
+from opentelemetry import trace
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.sdk.trace import TracerProvider
@@ -16,7 +17,10 @@ def create_app():
         exporter = AzureMonitorTraceExporter.from_connection_string(conn_str)
         tracer = TracerProvider(resource=Resource({SERVICE_NAME: "api"}))
         tracer.add_span_processor(BatchSpanProcessor(exporter))
-        FastAPIInstrumentor.instrument_app(app, tracer_provider=tracer)
+        trace.set_tracer_provider(tracer)
+
+        # Use the newer instrumentation pattern
+        FastAPIInstrumentor().instrument()
 
     app.include_router(fastapi_routes.router)
 
