@@ -35,7 +35,7 @@ def _pillow_textsize_compat(self, text, font=None, *args, **kwargs):
 def _ensure_pillow_textsize_compatibility():
     """
     Ensure textsize() method is available for py-staticmaps compatibility.
-    
+
     This function patches ImageDraw.ImageDraw to add the textsize() method
     if it doesn't exist (i.e., in Pillow 10.x). This is needed because
     py-staticmaps 0.4.0 uses the deprecated textsize() method.
@@ -69,7 +69,7 @@ def generate_map(
 ) -> ImageResponse:
     # Ensure Pillow 10.x compatibility for py-staticmaps
     _ensure_pillow_textsize_compatibility()
-    
+
     # Create the static map context
     context = staticmaps.Context()
     context.set_tile_provider(staticmaps.default_tile_providers[tile_provider.value])

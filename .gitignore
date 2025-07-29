@@ -135,4 +135,3 @@ __azurite_db*__.json
 .azure
 
 # Test scripts
-test_pillow_compatibility.py
