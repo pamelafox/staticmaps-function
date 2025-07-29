@@ -3,5 +3,5 @@ pytest
 coverage
 pytest-cov
 black
-ruff
+ruff==0.12.5
 pre-commit
