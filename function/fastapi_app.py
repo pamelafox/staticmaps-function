@@ -7,9 +7,6 @@ from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
-# Import Pillow 10.x compatibility patch for py-staticmaps
-import pillow_textsize_compat  # noqa: F401
-
 from . import fastapi_routes
 
 

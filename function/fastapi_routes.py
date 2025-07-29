@@ -4,6 +4,45 @@ import io
 import fastapi
 import fastapi.responses
 import staticmaps
+from PIL import ImageDraw
+
+
+def _pillow_textsize_compat(self, text, font=None, *args, **kwargs):
+    """
+    Compatibility function for Pillow 10.x that provides the old textsize() behavior.
+
+    This function uses the new textbbox() method and converts the result to the
+    (width, height) tuple that textsize() used to return.
+
+    The textsize() method was removed in Pillow 10.0.0 and replaced with textbbox().
+    See: https://github.com/python-pillow/Pillow/pull/6474
+    Migration guide: https://pillow.readthedocs.io/en/stable/releasenotes/10.0.0.html#font-size-and-offset-methods
+
+    Args:
+        text: The text to measure
+        font: The font to use (optional)
+        *args, **kwargs: Additional arguments passed to textbbox
+
+    Returns:
+        tuple: (width, height) of the text
+    """
+    # Use textbbox with anchor point (0, 0) and convert to size
+    bbox = self.textbbox((0, 0), text, font=font, *args, **kwargs)
+    # bbox is (left, top, right, bottom), so width = right - left, height = bottom - top
+    return (bbox[2] - bbox[0], bbox[3] - bbox[1])
+
+
+def _ensure_pillow_textsize_compatibility():
+    """
+    Ensure textsize() method is available for py-staticmaps compatibility.
+    
+    This function patches ImageDraw.ImageDraw to add the textsize() method
+    if it doesn't exist (i.e., in Pillow 10.x). This is needed because
+    py-staticmaps 0.4.0 uses the deprecated textsize() method.
+    """
+    if not hasattr(ImageDraw.ImageDraw, "textsize"):
+        ImageDraw.ImageDraw.textsize = _pillow_textsize_compat
+
 
 router = fastapi.APIRouter()
 
@@ -28,6 +67,9 @@ def generate_map(
     height: int = 400,
     tile_provider: TileProvider = TileProvider.osm,
 ) -> ImageResponse:
+    # Ensure Pillow 10.x compatibility for py-staticmaps
+    _ensure_pillow_textsize_compatibility()
+    
     # Create the static map context
     context = staticmaps.Context()
     context.set_tile_provider(staticmaps.default_tile_providers[tile_provider.value])
